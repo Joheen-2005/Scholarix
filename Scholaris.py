@@ -618,11 +618,21 @@ if "show_novelty" not in st.session_state:
     st.session_state.show_novelty = False
 
 # ==============================
-# GENERATE BUTTON
+# BUTTONS ROW — Generate & Novelty side by side
 # ==============================
-col1, col2, col3 = st.columns([1, 2, 1])
+col1, col2, col3, col4, col5 = st.columns([1, 2, 0.3, 2, 1])
 with col2:
     clicked = st.button("🚀 Generate Research Intelligence")
+with col4:
+    novelty_clicked = st.button("🔬 Analyse Novelty Score")
+
+if novelty_clicked:
+    if topic.strip() == "" and not st.session_state.last_topic:
+        st.warning("Please generate research intelligence first.")
+    else:
+        st.session_state.show_novelty = True
+        if topic.strip():
+            st.session_state.last_topic = topic
 
 if clicked:
     if topic.strip() == "":
@@ -660,15 +670,7 @@ if st.session_state.output:
     st.markdown("---")
 
     # ==============================
-    # NOVELTY BUTTON
-    # ==============================
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        if st.button("🔬 Analyze Novelty Score"):
-            st.session_state.show_novelty = True
-
-    # ==============================
-    # NOVELTY SCORE SECTION — only shown after button click
+    # NOVELTY SCORE SECTION — shown when Analyse Novelty Score button is clicked
     # ==============================
     if st.session_state.show_novelty:
         novelty_score = compute_novelty(st.session_state.last_topic)
