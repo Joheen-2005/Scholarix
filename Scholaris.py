@@ -767,7 +767,7 @@ st.markdown("""
 <div class="holo-divider" style="margin-top:3rem;"></div>
 <div style="text-align:center;padding:1.2rem 0;font-family:'Share Tech Mono',monospace;
             font-size:0.68rem;letter-spacing:0.25em;color:rgba(74,96,128,0.6);">
-  SCHOLARIS · MULTI-AGENT RESEARCH INTELLIGENCE · POWERED BY GROQ × LLAMA
 </div>
 """, unsafe_allow_html=True)
+
 
