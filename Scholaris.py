@@ -506,7 +506,8 @@ agent = st.sidebar.selectbox(
         "Research Gap Identification",
         "Methodology Design",
         "IEEE Draft Generation",
-        "Grant Proposal Generation"
+        "Grant Proposal Generation",
+        "Citation Generator"
     ]
 )
 
@@ -519,6 +520,7 @@ agent_icons = {
     "Methodology Design":          ("⚙️", "Designs architecture, metrics & experimental setup."),
     "IEEE Draft Generation":       ("📄", "Generates full IEEE-structured paper draft."),
     "Grant Proposal Generation":   ("💰", "Crafts funding-ready proposals with budget justification."),
+    "Citation Generator":          ("✅", "Generates accurate citations in APA, MLA, IEEE & Chicago styles."),
 }
 icon, desc = agent_icons.get(agent, ("🤖", ""))
 st.sidebar.markdown(f"""
@@ -606,6 +608,21 @@ Include:
 - Impact
 - Budget justification
 """
+    elif agent == "Citation Generator":
+        return f"""
+Generate comprehensive citations for the research topic: {topic}
+
+Provide citations in the following formats:
+- APA (7th edition)
+- MLA (9th edition)
+- IEEE
+- Chicago
+
+For each format include:
+- 5 highly relevant academic references with full citation details
+- In-text citation examples
+- Brief note on when to use each citation style
+"""
 
 # ==============================
 # SESSION STATE INIT
@@ -627,19 +644,16 @@ with col4:
     novelty_clicked = st.button("🔬 Analyse Novelty Score")
 
 if novelty_clicked:
-    if topic.strip() == "" and not st.session_state.last_topic:
-        st.warning("Please generate research intelligence first.")
+    if topic.strip() == "":
+        st.warning("Please enter a research topic.")
     else:
+        st.session_state.last_topic = topic
         st.session_state.show_novelty = True
-        if topic.strip():
-            st.session_state.last_topic = topic
 
 if clicked:
     if topic.strip() == "":
         st.warning("Please enter a research topic.")
     else:
-        # Reset novelty when a new generation is triggered
-        st.session_state.show_novelty = False
         with st.spinner("Scholarix analyzing research ecosystem..."):
             prompt = build_prompt(agent, topic)
             try:
@@ -656,7 +670,7 @@ if clicked:
             except Exception as e:
                 st.error(f"Error: {str(e)}")
 
-# ── Show output if it exists
+# ── Show output if it exists (independent of novelty)
 if st.session_state.output:
     st.success("Analysis Complete")
 
@@ -667,51 +681,49 @@ if st.session_state.output:
     st.markdown(st.session_state.output)
     st.markdown("</div>", unsafe_allow_html=True)
 
+# ── Show novelty independently — only needs topic, not output
+if st.session_state.show_novelty:
+    novelty_score = compute_novelty(st.session_state.last_topic)
+
     st.markdown("---")
 
-    # ==============================
-    # NOVELTY SCORE SECTION — shown when Analyse Novelty Score button is clicked
-    # ==============================
-    if st.session_state.show_novelty:
-        novelty_score = compute_novelty(st.session_state.last_topic)
+    st.metric(
+        label="Research Novelty Score",
+        value=f"{novelty_score}/100"
+    )
 
-        st.metric(
-            label="Research Novelty Score",
-            value=f"{novelty_score}/100"
-        )
+    if novelty_score > 75:
+        bar_color   = "linear-gradient(90deg, #00ffcc, #00d4ff)"
+        verdict     = "🚀 High novelty potential"
+        verdict_col = "#00ffcc"
+        st.success("High novelty potential 🚀")
+    elif novelty_score > 50:
+        bar_color   = "linear-gradient(90deg, #ffd166, #ff9f43)"
+        verdict     = "⚡ Moderate novelty potential"
+        verdict_col = "#ffd166"
+        st.info("Moderate novelty potential ⚡")
+    else:
+        bar_color   = "linear-gradient(90deg, #ff4d6d, #c9184a)"
+        verdict     = "⚠ Low novelty – consider refining idea"
+        verdict_col = "#ff4d6d"
+        st.warning("Low novelty – consider refining idea ⚠")
 
-        if novelty_score > 75:
-            bar_color   = "linear-gradient(90deg, #00ffcc, #00d4ff)"
-            verdict     = "🚀 High novelty potential"
-            verdict_col = "#00ffcc"
-            st.success("High novelty potential 🚀")
-        elif novelty_score > 50:
-            bar_color   = "linear-gradient(90deg, #ffd166, #ff9f43)"
-            verdict     = "⚡ Moderate novelty potential"
-            verdict_col = "#ffd166"
-            st.info("Moderate novelty potential ⚡")
-        else:
-            bar_color   = "linear-gradient(90deg, #ff4d6d, #c9184a)"
-            verdict     = "⚠ Low novelty – consider refining idea"
-            verdict_col = "#ff4d6d"
-            st.warning("Low novelty – consider refining idea ⚠")
-
-        st.markdown(f"""
-        <div class="novelty-card">
-          <div class="novelty-label">🔬 Novelty Score Analysis</div>
-          <div class="novelty-score-display" style="background:{bar_color};
-               -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
-            {novelty_score}<span style="font-size:1.8rem;font-weight:400;">/100</span>
-          </div>
-          <div class="novelty-bar-track">
-            <div class="novelty-bar-fill" style="width:{novelty_score}%;background:{bar_color};"></div>
-          </div>
-          <div style="font-family:'Orbitron',monospace;font-size:0.82rem;
-                      letter-spacing:0.12em;color:{verdict_col};margin-top:0.8rem;">
-            {verdict}
-          </div>
-        </div>
-        """, unsafe_allow_html=True)
+    st.markdown(f"""
+    <div class="novelty-card">
+      <div class="novelty-label">🔬 Novelty Score Analysis</div>
+      <div class="novelty-score-display" style="background:{bar_color};
+           -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+        {novelty_score}<span style="font-size:1.8rem;font-weight:400;">/100</span>
+      </div>
+      <div class="novelty-bar-track">
+        <div class="novelty-bar-fill" style="width:{novelty_score}%;background:{bar_color};"></div>
+      </div>
+      <div style="font-family:'Orbitron',monospace;font-size:0.82rem;
+                  letter-spacing:0.12em;color:{verdict_col};margin-top:0.8rem;">
+        {verdict}
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # ── FOOTER
 st.markdown("""
