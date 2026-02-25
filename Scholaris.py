@@ -695,7 +695,7 @@ if clicked:
             prompt = build_prompt(agent, topic)
             try:
                 response = client.chat.completions.create(
-                    model="llama-3.1-8b-instant",
+                    model="mixtral-8x7b-32768",
                     messages=[
                         {"role": "system", "content": "You are an advanced AI research director."},
                         {"role": "user", "content": prompt}
@@ -770,3 +770,4 @@ st.markdown("""
   SCHOLARIS · MULTI-AGENT RESEARCH INTELLIGENCE · POWERED BY GROQ × LLAMA
 </div>
 """, unsafe_allow_html=True)
+
