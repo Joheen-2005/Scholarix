@@ -903,7 +903,8 @@ st.markdown("""
             font-family:'JetBrains Mono',monospace;
             font-size:0.57rem;letter-spacing:0.35em;text-transform:uppercase;
             color:var(--t4,#5a6e96);">
-  Scholaris &nbsp;·&nbsp; Multi-Agent Research Intelligence &nbsp;·&nbsp; Powered by Groq &times; LLaMA
+  Scholaris &nbsp;·&nbsp; Multi-Agent Research Engine &nbsp;·&nbsp;
 </div>
 """, unsafe_allow_html=True)
+
 
