@@ -634,8 +634,8 @@ st.markdown("""
   <div class="sch-eyebrow">Multi-Agent Research Intelligence · v2.0</div>
   <div class="sch-wordmark">Schol<span class="hi">a</span>ris</div>
   <div class="sch-tagline">
-    Literature Mining &nbsp;·&nbsp; Gap Detection &nbsp;·&nbsp; Methodology Design<br>
-    IEEE Drafting &nbsp;&amp;&nbsp; Grant Proposal Generation
+    Literature Mining &nbsp;·&nbsp; Gap Detection &nbsp;·&nbsp; Methodology Design &nbsp;·&nbsp; Trend Analysis<br>
+    IEEE Drafting &nbsp;&amp;&nbsp; Grant Proposal Generation &nbsp;&amp;&nbsp; Citation Generation
   </div>
   <div><span class="sch-badge"><span class="sch-badge-dot"></span>System Online</span></div>
 </div>
@@ -809,6 +809,7 @@ st.markdown("""
             font-family:'JetBrains Mono',monospace;
             font-size:0.57rem;letter-spacing:0.35em;text-transform:uppercase;
             color:var(--t4,#5a6e96);">
-  Scholaris &nbsp;·&nbsp; Multi-Agent Research Intelligence &nbsp;·&nbsp; Powered by Groq × LLaMA
+  Scholaris &nbsp;·&nbsp; Multi-Agent Research Engine &nbsp;·&nbsp;
 </div>
 """, unsafe_allow_html=True)
+
